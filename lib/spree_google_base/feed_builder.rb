@@ -33,9 +33,9 @@ module SpreeGoogleBase
     
     def ar_scope
       if @store
-        Spree::Product.by_store(@store).google_base_scope.scoped
+        Spree::Product.by_store(@store).google_base_scope
       else
-        Spree::Product.google_base_scope.scoped
+        Spree::Product.google_base_scope
       end
     end
 
@@ -105,13 +105,19 @@ module SpreeGoogleBase
     end
     
     def build_images(xml, product)
-      main_image, *more_images = product.master.images
+      if Spree::GoogleBase::Config[:enable_additional_images]
+        main_image, *more_images = product.master.images
+      else
+        main_image = product.master.images.first
+      end
 
       return unless main_image
       xml.tag!('g:image_link', image_url(product, main_image))
 
-      more_images.each do |image|
-        xml.tag!('g:additional_image_link', image_url(product, image))
+      if Spree::GoogleBase::Config[:enable_additional_images]
+        more_images.each do |image|
+          xml.tag!('g:additional_image_link', image_url(product, image))
+        end
       end
     end
 

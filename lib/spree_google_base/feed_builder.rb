@@ -11,7 +11,15 @@ module SpreeGoogleBase
         builder.generate_and_transfer_store
       end
     end
-    
+
+    def self.generate_test_file(file_path)
+      exporter = new
+
+      File.open(file_path, "w") do |file|
+        exporter.generate_xml file
+      end
+    end
+
     def self.builders
       if defined?(Spree::Store)
         Spree::Store.all.map{ |store| self.new(:store => store) }

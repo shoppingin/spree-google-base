@@ -131,7 +131,7 @@ module SpreeGoogleBase
 
     def image_url product, image
       base_url = image.attachment.url(product.google_base_image_size)
-      base_url = "#{domain}/#{base_url}" unless Spree::Config[:use_s3]
+      base_url = "#{domain}/#{base_url}" unless Spree::Image.attachment_definitions[:attachment][:storage] == :s3
 
       base_url
     end

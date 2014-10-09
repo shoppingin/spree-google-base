@@ -1,24 +1,35 @@
-<% content_for :head do -%>
-<%= stylesheet_link_tag 'google_base.css' %>
-<% end -%>
-
-<div id="google_base_map">
-<h1>Google Base Taxonomy Mapping</h1>
-<a href="http://www.google.com/support/merchants/bin/answer.py?hl=en&answer=160081" target="_blank">Google Taxonomy Listings</a>
-
-<%= form_for :taxon_maper do |f| %>
-  <div class="headers">
-    <label for="header">Taxon</label>
-    <div class="priority">Priority</div>
-    <div class="category">Category</div>
-  </div>    
-<% @taxons.each do |taxon| -%>
-  <p>
-    <label><%= taxon.name %></label>
-    <%= text_field(:priority, taxon.id, :value => taxon.taxon_map.priority.to_s, :class => 'priority') %>
-    <%= text_field(:tax_id, taxon.id, :value => taxon.taxon_map.product_type, :class => 'category') %>
-  </p>
-<% end -%>
-<%= submit_tag 'Update' %>
+<% content_for :page_title do %>
+  Google Base Taxonomy Mapping
 <% end %>
+
+<div>
+  More info: <a href="http://www.google.com/support/merchants/bin/answer.py?hl=en&answer=160081" target="_blank">Google Taxonomy Listings</a>
 </div>
+<%= form_for :taxon_maper do |f| %>
+<table class="index" data-hook>
+  <thead>
+    <tr>
+      <th>Taxon</th>
+      <th>Priority</th>
+      <th>Category</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @taxons.each do |taxon| -%>
+      <tr id="<%= spree_dom_id taxon %>" class="<%= cycle('odd', 'even')%>">
+        <td><%= taxon.name %></td>
+        <td><%= text_field(:priority, taxon.id, :value => taxon.taxon_map.priority.to_s, :class => 'priority') %></td>
+        <td><%= text_field(:tax_id, taxon.id, :value => taxon.taxon_map.product_type, :class => 'category') %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div class="clearfix"></div>
+
+<div class="actions filter-actions">
+  <div data-hook="admin_orders_index_search_buttons">
+    <%= submit_tag 'Update', class: 'button' %>
+  </div>
+</div>
+<% end %>
